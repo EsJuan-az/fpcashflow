@@ -1,5 +1,6 @@
 
 import streamlit as st
+from time import sleep
 from utils.store import work as w
 from utils.auth0 import getAuth0 
 from ui.modals import register_work
@@ -19,3 +20,7 @@ if getAuth0():
   col2.metric(label="Pago Potencial", value=f"${potential_payment:,.0f}")
   col3.metric(label="Desviación de Pagos", value=f"${payment_deviation:,.2f}")
   st.write(w)
+
+else:
+    sleep(1)
+    st.error('Inicia sesión para continuar.')

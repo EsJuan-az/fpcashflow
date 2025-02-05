@@ -1,14 +1,11 @@
 import streamlit as st
 from time import sleep
-from utils.store import transaction_movement as ts
+from utils.store import transaction_movement as tm
 from utils.auth0 import getAuth0
 
 st.sidebar.image("https://5pa.co/5PA/web/images/Logo_5PA2.PNG", use_container_width=True)
 
 if getAuth0():
-
-
-
 
     
     col1, col2 = st.columns(2)

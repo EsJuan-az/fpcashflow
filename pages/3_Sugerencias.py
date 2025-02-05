@@ -77,7 +77,7 @@ Gestión de riesgos: Identifica los riesgos financieros que enfrenta tu empresa 
 
 
 def stream_data(n):
-    if n == 1:
+    if n == "no":
         st.header("_ANALISIS_ :green[PROFUNDO Y REALISTA:] ", divider = "red")
         for word in _PARRAFO1.split(" "):
             yield word + " "
@@ -141,24 +141,27 @@ fondo = 6 *(gastosPromedio + calculoDesviacionGastos * 0.3)
 st.markdown(f"<div style='text-align: center; font-size: 40px; color: yellow;'>{"FONDO DE ESTABILIZACIÓN"}</div>", unsafe_allow_html=True)
 st.markdown(f"<div style='text-align: center; font-size: 40px;'>${fondo:.0f}</div>", unsafe_allow_html=True)
 
-if balance < 0:
-        st.divider()
-        st.title("_Balance negativo_")
-        st.subheader("Se recomienda seguir los siguientes pasos: ")  
-         
-        if st.button("mostar sugerencias", type= "secondary"):
-            st.write_stream(stream_data(1))
-        st.divider()
-            
+option_map = {
+    0: "Si",
+    1: "No",
+}
+selection = st.radio(
+    "Te alcanza para cubrir el fondo de estabilización?",
+    options=option_map.keys(),
+    format_func=lambda option: option_map[option],
+    horizontal=True,
+    index=0,
+)
+
+st.markdown(
+    f"<div style='text-align: center; font-size: 24px;'>Seleccionaste que: "
+    f"{'Nada' if selection is None else option_map[selection]}</div>",
+    unsafe_allow_html=True,
+)
+
+if selection == 0:
+    st.write_stream(stream_data("si"))
+elif selection == 1:
+    st.write_stream(stream_data("no"))
 else:
-        st.divider()
-        st.title("_Balance positivo_")
-        
-        st.subheader("Se recomienda seguir los siguientes pasos: ")
-        
-        if st.button("mostar sugerencias", type= "secondary"):  
-            st.write_stream(stream_data(0))
-        
-        st.divider()
-     
-        
+    st.write("Selecciona una opción")

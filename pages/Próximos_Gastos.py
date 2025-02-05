@@ -21,14 +21,14 @@ df_sorted = df.sort_values(by="Fecha de vencimiento")
 opciones_proyecto = df["Proyecto"].unique()
 opciones_proveedor = df["Proveedor"].unique()
 
-tab1, tab2, tab3 = st.tabs(["📊 Flujo de Caja", "➕ Registrar Gasto", "💰 Pagar Facturas"])
+tab1, tab2, tab3 = st.tabs(["📊 Flujo de Caja", "➕ Registrar Gasto Adicional", "💰 Pagar Facturas"])
 
 with tab1:
-    st.subheader("🔍 Gastos con vencimiento más próximo")    
+    st.subheader("🔍 Gastos con próximo vencimiento")    
     st.dataframe(df_sorted, hide_index=True)
 
 with tab2:
-    st.subheader("➕ Registrar pago inesperado")
+    st.subheader("➕ Registrar gastos adicionales")
 
     with st.form("form_registro"):
         proyecto = st.selectbox("Selecciona el Proyecto", opciones_proyecto)

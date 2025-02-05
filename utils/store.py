@@ -49,8 +49,6 @@ transaction_movement = pd.DataFrame({
     ]
 })
 
-print(transaction_movement)
-
 transaction_movement.set_index('id', inplace=True)
 # Crear DataFrame de Obra
 work = pd.DataFrame({

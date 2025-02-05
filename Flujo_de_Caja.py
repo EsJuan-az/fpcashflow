@@ -3,6 +3,9 @@ import pandas as pd
 from utils.auth0 import getAuth0
 import base64
 from utils.store import transaction_movement as tm
+import time
+import numpy as np
+
 
 st.sidebar.image("https://5pa.co/5PA/web/images/Logo_5PA2.PNG", use_container_width=True)
 
@@ -22,3 +25,4 @@ if user_info:
     
     balance_fund=sum_income-sum_expense
     col4.metric(label="Balance fondo", value=f"${balance_fund:,.0f}")
+    

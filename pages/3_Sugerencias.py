@@ -6,6 +6,7 @@ from utils.store import transaction_movement as tm
 import time
 import numpy as np
 
+
 st.sidebar.image("https://5pa.co/5PA/web/images/Logo_5PA2.PNG", use_container_width=True)
 
 user_info = getAuth0()
@@ -127,7 +128,19 @@ else:
             st.write_stream(stream_data(0))
         
         st.divider()
+        
+CO1, CO2, CO3 = st.columns(3)
+CO1.write("#### Gastos")
 
+c01, c02, c03 = st.columns(3)
+gastos = tm[tm['transaction_type'] == 'expense']['amount'].sum()
+gastosPromedio =tm[tm['transaction_type'] == 'expense']['amount'].mean().__round__(2)
+cantidadGastos = tm[tm['transaction_type'] == 'expense']['amount'].count()
+calculoDesviacionGastos=((((tm[tm['transaction_type'] == 'expense']['amount'] - gastosPromedio) ** 2).sum()) // (cantidadGastos - 1))  ** 0.5
+
+c01.metric(label="Promedio", value=f"${gastosPromedio}", delta=f"${gastos/100:.0f}")
+c02.metric(label="Total", value=f"${gastos:,.0f}")
+c03.metric(label="Desviación", value=f"${calculoDesviacionGastos:.0f}")
    
      
         

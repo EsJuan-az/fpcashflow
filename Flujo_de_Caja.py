@@ -30,6 +30,7 @@ if user_info:
     col4.metric(label="Balance fondo", value=f"${balance_fund:,.0f}")
     col5.metric(label='Balance libre de uso', value=f'${balance_free:,.0f}')
 
+
     
     if st.button('Registrar transacción'):
         register_transaction()

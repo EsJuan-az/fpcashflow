@@ -90,6 +90,18 @@ def stream_data(n):
         for word in _PARRAFO3.split(" "):
             yield word + " "
             time.sleep(0.02)
+        st.header("SE LE ACONSEJA CREAR UN FONDO DE ESTABILIZACIÓN MAS ROBUSTO", divider = "green")
+        
+        respuesta = st.text_input("¿Cuánto dinero le gustaría ahorrar en su fondo de estabilización?", value=f"${fondo:.0f}")
+        if st.button("Guardar"):
+            st.write(f"Se ha guardado la cantidad de {respuesta} en su fondo de estabilización")
+        respuesta = respuesta.replace("$", "").replace(",", "")
+        respuesta = int(respuesta)
+        
+        st.write("Recuerde que el fondo de estabilización es un colchón financiero que le permitirá afrontar imprevistos y mantener la estabilidad de su negocio en tiempos de crisis.")
+        ahorro = (respuesta - fondo) / balance * 100
+        st.write(f"Para llegar a esa cifra debera ahorrar un {ahorro}% de su balance actual")
+        
             
     else:
         st.header("_INVERSION_ :green[INTELIGENTE:] ", divider = "green")
@@ -102,7 +114,6 @@ def stream_data(n):
             time.sleep(0.01)
             
         for word in _PARRAFO6.split(" "):
-            
             yield word + " "
             time.sleep(0.02)
             

@@ -108,13 +108,45 @@ def stream_data(n):
             
             
 columna1, columna2, columna3 = st.columns(3)
+CO1, CO2, CO3 = st.columns(3)
+
+CO1.title(":red[GASTOS]")
+
+c01, c02, c03 = st.columns(3)
+gastos = tm[tm['transaction_type'] == 'expense']['amount'].sum()
+gastosPromedio =tm[tm['transaction_type'] == 'expense']['amount'].mean().__round__(2)
+cantidadGastos = tm[tm['transaction_type'] == 'expense']['amount'].count()
+calculoDesviacionGastos=((((tm[tm['transaction_type'] == 'expense']['amount'] - gastosPromedio) ** 2).sum()) // (cantidadGastos - 1))  ** 0.5
+
+st.title(":green[INGRESOS]")
+c01.metric(label="Promedio", value=f"${gastosPromedio}", delta=f"${gastos/100:.0f}")
+c02.metric(label="Total", value=f"${gastos:,.0f}")
+c03.metric(label="Desviación", value=f"${calculoDesviacionGastos:.0f}")
+
+
+
+c04, c05, c06 = st.columns(3)
+ingresos = tm[tm['transaction_type'] == 'income']['amount'].sum()
+ingresosPromedio =tm[tm['transaction_type'] == 'income']['amount'].mean().__round__(2)
+cantidadIngresos = tm[tm['transaction_type'] == 'income']['amount'].count()
+calculoDesviacionIngresos=((((tm[tm['transaction_type'] == 'income']['amount'] - ingresosPromedio) ** 2).sum()) // (cantidadIngresos - 1))  ** 0.5
+
+c04.metric(label="Promedio", value=f"${ingresosPromedio}", delta=f"${ingresos/100:.0f}")
+c05.metric(label="Total", value=f"${ingresos:,.0f}")
+c06.metric(label="Desviación", value=f"${calculoDesviacionIngresos:.0f}")
+
+factorSeguridad = (tm[tm['transaction_type'] == 'expense']['amount']* tm[tm['transaction_type'] == 'expense']['stabilization_fund_percentage']).mean()
+fondo = 6 *(gastosPromedio + calculoDesviacionGastos * 0.3)
+
+st.markdown(f"<div style='text-align: center; font-size: 40px; color: yellow;'>{"FONDO DE ESTABILIZACIÓN"}</div>", unsafe_allow_html=True)
+st.markdown(f"<div style='text-align: center; font-size: 40px;'>${fondo:.0f}</div>", unsafe_allow_html=True)
 
 if balance < 0:
         st.divider()
         st.title("_Balance negativo_")
         st.subheader("Se recomienda seguir los siguientes pasos: ")  
          
-        if columna2.button("mostar sugerencias", type= "secondary"):
+        if st.button("mostar sugerencias", type= "secondary"):
             st.write_stream(stream_data(1))
         st.divider()
             
@@ -124,23 +156,9 @@ else:
         
         st.subheader("Se recomienda seguir los siguientes pasos: ")
         
-        if columna2.button("mostar sugerencias", type= "secondary"):  
+        if st.button("mostar sugerencias", type= "secondary"):  
             st.write_stream(stream_data(0))
         
         st.divider()
-        
-CO1, CO2, CO3 = st.columns(3)
-CO1.write("#### Gastos")
-
-c01, c02, c03 = st.columns(3)
-gastos = tm[tm['transaction_type'] == 'expense']['amount'].sum()
-gastosPromedio =tm[tm['transaction_type'] == 'expense']['amount'].mean().__round__(2)
-cantidadGastos = tm[tm['transaction_type'] == 'expense']['amount'].count()
-calculoDesviacionGastos=((((tm[tm['transaction_type'] == 'expense']['amount'] - gastosPromedio) ** 2).sum()) // (cantidadGastos - 1))  ** 0.5
-
-c01.metric(label="Promedio", value=f"${gastosPromedio}", delta=f"${gastos/100:.0f}")
-c02.metric(label="Total", value=f"${gastos:,.0f}")
-c03.metric(label="Desviación", value=f"${calculoDesviacionGastos:.0f}")
-   
      
         

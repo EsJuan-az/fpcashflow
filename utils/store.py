@@ -3,10 +3,11 @@ from uuid import uuid4
 # Crear DataFrame de Movimiento Transaccional
 import pandas as pd
 from uuid import uuid4
-
+from random import choice
+work_ids = [str(uuid4()) for _ in range(5)]
 transaction_movement = pd.DataFrame({
     'id': [str(uuid4()) for _ in range(20)],
-    'work_id': [101, 102, None, 103, None, 104, 105, None, 101, 103, 106, None, 107, 108, 109, 110, None, 111, 112, 113],
+    'work_id': [choice(work_ids) for _ in range(20)],
     'description': [
         'Supplier payment', 'Material sale', 'Donation', 'Equipment purchase', 
         'Refund', 'Maintenance', 'Service payment', 'Grant', 'Project advance', 'Final settlement',
@@ -24,14 +25,10 @@ transaction_movement = pd.DataFrame({
         '2024-05-12', '2024-06-22', '2024-08-14', '2024-09-05', '2024-07-25',
         '2024-10-18', '2024-11-30', '2024-12-05', '2024-08-29', '2024-09-10'
     ]),
-    'end_date': [pd.NaT, pd.NaT, pd.NaT, '2025-10-05', pd.NaT, '2025-12-30', 
+    'end_date': pd.to_datetime([pd.NaT, pd.NaT, pd.NaT, '2025-10-05', pd.NaT, '2025-12-30', 
                  '2025-06-10', pd.NaT, pd.NaT, '2025-10-30', pd.NaT, pd.NaT,
                  '2025-08-14', '2025-09-05', pd.NaT, '2025-10-18', '2025-11-30',
-                 pd.NaT, pd.NaT, '2025-09-10'],
-    'last_movement_date': [pd.NaT, pd.NaT, pd.NaT, '2024-10-05', pd.NaT, '2024-12-30',
-                           '2024-06-10', pd.NaT, '2024-07-18', '2024-10-30', pd.NaT, 
-                           pd.NaT, '2024-08-14', '2024-09-05', pd.NaT, '2024-10-18', 
-                           '2024-11-30', pd.NaT, pd.NaT, '2024-09-10'],
+                 pd.NaT, pd.NaT, '2025-09-10']),
     'transaction_type': ['expense', 'income', 'income', 'expense', 'income', 'expense', 
                          'expense', 'income', 'income', 'expense', 'expense', 'income', 
                          'expense', 'expense', 'expense', 'income', 'income', 'expense',
@@ -52,7 +49,7 @@ transaction_movement = pd.DataFrame({
 transaction_movement.set_index('id', inplace=True)
 # Crear DataFrame de Obra
 work = pd.DataFrame({
-    'work_id': [str(uuid4()) for _ in range(5)],
+    'work_id': work_ids,
     'name': ['Central Building', 'North Bridge', 'Rural School', 'Municipal Hospital', 'Tech Park'],
     'stipulated_payment': [50000, 75000, 30000, 100000, 120000],
     'start_date': pd.to_datetime(['2024-06-01', '2024-07-15', '2024-08-01', '2024-09-10', '2024-10-05']),

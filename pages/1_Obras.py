@@ -19,7 +19,9 @@ if getAuth0():
   col1.metric(label="# de Obras", value=f"{nworks:,.0f}")
   col2.metric(label="Pago Potencial", value=f"${potential_payment:,.0f}")
   col3.metric(label="Desviación de Pagos", value=f"${payment_deviation:,.2f}")
-  st.write(w)
+  rename_map = {'name': 'Nombre del Trabajo', 'stipulated_payment': 'Pago estipulado', 'start_date': 'Fecha de Inicio', 'end_date': 'Fecha de Finalziación'}
+  wcp = w.copy().rename(rename_map, axis=1)
+  st.dataframe(wcp[rename_map.values()], hide_index=True)
 
 else:
     sleep(1)

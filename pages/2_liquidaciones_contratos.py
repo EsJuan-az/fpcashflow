@@ -2,6 +2,50 @@ import streamlit as st
 from datetime import date, timedelta
 import pandas as pd
 
+# Datos de empleados (simulados)
+employees_data = {
+    'id': [
+        'e1f2g3h4-1234-5678-9101-112131415161',
+        'f2g3h4i5-2345-6789-1011-121314151617',
+        'g3h4i5j6-3456-7891-0111-213141516171',
+        'h4i5j6k7-4567-8910-1112-131415161718',
+        'i5j6k7l8-5678-9101-1121-314151617181',
+    ],
+    'name': [
+        'Juan Pérez', 'María Gómez', 'Carlos López', 'Ana Rodríguez', 'Luis Martínez',
+    ],
+    'contact': [
+        '3001234567', '3102345678', '3203456789', '3304567890', '3405678901',
+    ],
+    'role': [
+        'Manager', 'Accountant', 'Engineer', 'Supervisor', 'Technician',
+    ],
+    'monthly_salary': [
+        5000, 4500, 4000, 4200, 3800,
+    ],
+    'entered_date': [
+        '2020-01-15', '2019-05-20', '2021-03-10', '2018-11-01', '2022-02-25',
+    ],
+    'contract_type': [
+        'Permanent', 'Temporary', 'Permanent', 'Permanent', 'Temporary',
+    ],
+    'end_contract_date': [
+        None, '2024-05-20', None, None, '2023-02-25',
+    ],
+    'department': [
+        'Finance', 'Finance', 'Engineering', 'Operations', 'Engineering',
+    ],
+    'status': [
+        'Active', 'Active', 'Active', 'Active', 'Active',
+    ]
+}
+
+# Crear DataFrame de empleados
+employees = pd.DataFrame(employees_data)
+employees['entered_date'] = pd.to_datetime(employees['entered_date'])
+employees['end_contract_date'] = pd.to_datetime(employees['end_contract_date'])
+
+# Inicializar lista de contratos en session_state
 if 'contracts' not in st.session_state:
     st.session_state.contracts = []
 
@@ -15,17 +59,28 @@ if pagina == "Administrar Contratos":
     st.title("Administrar Contratos")
     st.subheader("Registrar un nuevo contrato")
 
+    # Seleccionar empleado
+    employee_options = [f"{row['name']} ({row['contact']})" for _, row in employees.iterrows()]
+    selected_employee = st.selectbox("Seleccionar empleado", options=employee_options)
+
+    # Obtener detalles del empleado seleccionado
+    selected_name, selected_contact = selected_employee.split(" (")
+    selected_contact = selected_contact[:-1]  # Remover el paréntesis final
+    selected_employee_data = employees[(employees['name'] == selected_name) & (employees['contact'] == selected_contact)].iloc[0]
+
     with st.form("form_contrato", clear_on_submit=True):
         tipo_contrato = st.selectbox("Tipo de contrato", options=["Empleado", "Proveedor", "Colaborador", "Otro"])
         fecha_inicio = st.date_input("Fecha de inicio", value=date.today())
         duracion_dias = st.number_input("Duración del contrato (días)", min_value=1, value=30)
-        monto = st.number_input("Monto / Salario", min_value=0.0, value=1000.0, format="%.2f")
+        monto = st.number_input("Monto / Salario", min_value=0.0, value=float(selected_employee_data['monthly_salary']), format="%.2f")
         contrato_file = st.file_uploader("Adjuntar contrato (PDF/Imagen)", type=["pdf", "png", "jpg", "jpeg"])
         enviar = st.form_submit_button("Registrar contrato")
 
     if enviar:
         fecha_fin = fecha_inicio + timedelta(days=duracion_dias)
         nuevo_contrato = {
+            "Nombre": selected_name,
+            "Contacto": selected_contact,
             "Tipo": tipo_contrato,
             "Fecha inicio": fecha_inicio,
             "Fecha fin": fecha_fin,
@@ -57,10 +112,19 @@ elif pagina == "Calcular Liquidaciones":
     st.title("Calcular Liquidaciones")
     st.subheader("Calcular liquidación de un contrato finalizado")
 
+    # Seleccionar empleado
+    employee_options = [f"{row['name']} ({row['contact']})" for _, row in employees.iterrows()]
+    selected_employee = st.selectbox("Seleccionar empleado", options=employee_options)
+
+    # Obtener detalles del empleado seleccionado
+    selected_name, selected_contact = selected_employee.split(" (")
+    selected_contact = selected_contact[:-1]  # Remover el paréntesis final
+    selected_employee_data = employees[(employees['name'] == selected_name) & (employees['contact'] == selected_contact)].iloc[0]
+
     with st.form("form_liquidacion", clear_on_submit=True):
         tipo_contrato = st.selectbox("Tipo de contrato", options=["Empleado", "Colaborador", "Otro"])
-        salario = st.number_input("Salario / Monto mensual", min_value=0.0, value=1000.0, format="%.2f")
-        fecha_inicio_contrato = st.date_input("Fecha de inicio del contrato", value=date(2023, 1, 1))
+        salario = st.number_input("Salario / Monto mensual", min_value=0.0, value=float(selected_employee_data['monthly_salary']), format="%.2f")
+        fecha_inicio_contrato = st.date_input("Fecha de inicio del contrato", value=selected_employee_data['entered_date'].to_pydatetime().date())
         fecha_fin_contrato = st.date_input("Fecha de finalización del contrato", value=date.today())
         ajuste_manual = st.number_input("Ajuste manual (opcional)", value=0.0, format="%.2f")
         enviar_liq = st.form_submit_button("Calcular Liquidación")
@@ -72,6 +136,8 @@ elif pagina == "Calcular Liquidaciones":
         st.success(f"Liquidación calculada: {liquidacion:.2f}")
         
         datos_reporte = {
+            "Nombre": [selected_name],
+            "Contacto": [selected_contact],
             "Tipo de contrato": [tipo_contrato],
             "Fecha inicio": [fecha_inicio_contrato],
             "Fecha finalización": [fecha_fin_contrato],

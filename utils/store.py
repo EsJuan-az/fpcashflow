@@ -125,12 +125,10 @@ products_data = {
 # Crear DataFrame de productos
 products = pd.DataFrame(products_data)
 products.set_index('id', inplace=True)
-
-import pandas as pd
-
 # Datos fijos para empleados
 employees_data = {
     'id': [
+        'a1b2c3d4-0001', 'a1b2c3d4-0002', 'a1b2c3d4-0003', 'a1b2c3d4-0004',
         'e1f2g3h4-1234-5678-9101-112131415161',
         'f2g3h4i5-2345-6789-1011-121314151617',
         'g3h4i5j6-3456-7891-0111-213141516171',
@@ -143,39 +141,65 @@ employees_data = {
         'n0o1p2q3-1011-1213-1415-161718192122'
     ],
     'name': [
+        'Juan Esteban Arango', 'Samuel Colorado', 'Juan José Arango', 'Sebiñan Ramirez',
         'Juan Pérez', 'María Gómez', 'Carlos López', 'Ana Rodríguez', 'Luis Martínez',
         'Sofía Hernández', 'Diego García', 'Laura Díaz', 'Jorge Sánchez', 'Carmen Ruiz'
     ],
+    'email': [
+        'juarangoz@unal.edu.co', 'sacolorado@unal.edu.co', 'jarangoma@unal.edu.co', '159sebastian.ramirez@gmail.com',
+        'juanperez@email.com', 'mariagomez@email.com', 'carloslopez@email.com', 'anarodriguez@email.com', 'luismartinez@email.com',
+        'sofiahernandez@email.com', 'diegogarcia@email.com', 'lauradiaz@email.com', 'jorgesanchez@email.com', 'carmenruiz@email.com'
+    ],
     'contact': [
+        '3000000001', '3000000002', '3000000003', '3000000004',
         '3001234567', '3102345678', '3203456789', '3304567890', '3405678901',
         '3506789012', '3607890123', '3708901234', '3809012345', '3900123456'
     ],
     'role': [
+        'Manager', 'Analyst', 'Engineer', 'Technician',
         'Manager', 'Accountant', 'Engineer', 'Supervisor', 'Technician',
         'Analyst', 'Engineer', 'Technician', 'Supervisor', 'Accountant'
     ],
     'monthly_salary': [
-        5000, 4500, 4000, 4200, 3800, 4100, 3900, 3700, 4300, 4400
+        5500, 4800, 4200, 4000,
+        5000, 4500, 4000, 4200, 3800,
+        4100, 3900, 3700, 4300, 4400
     ],
     'entered_date': [
+        '2024-01-10', '2023-12-15', '2023-11-20', '2023-10-05',
         '2020-01-15', '2019-05-20', '2021-03-10', '2018-11-01', '2022-02-25',
         '2020-07-12', '2021-09-05', '2019-12-18', '2022-04-30', '2023-01-10'
     ],
     'contract_type': [
+        'Permanent', 'Temporary', 'Permanent', 'Temporary',
         'Permanent', 'Temporary', 'Permanent', 'Permanent', 'Temporary',
         'Permanent', 'Temporary', 'Permanent', 'Permanent', 'Temporary'
     ],
     'end_contract_date': [
+        None, '2025-12-15', None, '2024-10-05',
         None, '2024-05-20', None, None, '2023-02-25',
         None, '2023-09-05', None, None, '2024-01-10'
     ],
     'department': [
+        'Finance', 'Analytics', 'Engineering', 'Operations',
         'Finance', 'Finance', 'Engineering', 'Operations', 'Engineering',
         'Analytics', 'Engineering', 'Operations', 'Operations', 'Finance'
     ],
     'status': [
+        'Active', 'Active', 'Active', 'Active',
         'Active', 'Active', 'Active', 'Active', 'Active',
         'Active', 'Active', 'Active', 'Active', 'Active'
+    ],
+    'pension_contributions': [
+        0.04] * 14,
+    'severance': [
+        0.0833] * 14,
+    'bonus': [
+        0.0833] * 14,
+    'overtime_rate': [
+        28, 26, 24, 23,
+        25, 22.5, 20, 21, 19,
+        20.5, 19.5, 18.5, 21.5, 22
     ]
 }
 
@@ -188,4 +212,3 @@ employees['end_contract_date'] = pd.to_datetime(employees['end_contract_date'])
 
 # Establecer 'id' como índice
 employees.set_index('id', inplace=True)
-

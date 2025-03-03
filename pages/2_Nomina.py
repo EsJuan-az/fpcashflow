@@ -44,7 +44,7 @@ pagina = st.sidebar.radio("Selecciona una sección", ("Administrar Contratos", "
 if pagina == "Administrar Contratos":
     st.title("Administrar Contratos")
     st.subheader("Registrar un nuevo contrato")
-
+    selected_employee_data = None
     # Seleccionar empleado existente o añadir uno nuevo
     opcion_empleado = st.radio("Seleccione una opción", ("Usar empleado existente", "Registrar nuevo empleado"))
 
@@ -89,32 +89,33 @@ if pagina == "Administrar Contratos":
             }
             
             # Añadir el nuevo empleado al DataFrame
-            employees.loc[len(employees)] = nuevo_empleado
+            employees.loc[nuevo_id] = nuevo_empleado
             st.success(f"Empleado {nombre} registrado exitosamente con ID: {nuevo_id}")
-            selected_employee_data = nuevo_empleado
+            selected_employee_data = employees.loc[nuevo_id]
 
     # Formulario para registrar contrato
-    with st.form("form_contrato", clear_on_submit=True):
-        tipo_contrato = st.selectbox("Tipo de contrato", options=["Empleado", "Proveedor", "Colaborador", "Otro"])
-        fecha_inicio = st.date_input("Fecha de inicio", value=date.today())
-        duracion_dias = st.number_input("Duración del contrato (días)", min_value=1, value=30)
-        monto = st.number_input("Monto / Salario", min_value=0.0, value=float(selected_employee_data['monthly_salary']), format="%.2f")
-        contrato_file = st.file_uploader("Adjuntar contrato (PDF/Imagen)", type=["pdf", "png", "jpg", "jpeg"])
-        enviar = st.form_submit_button("Registrar contrato")
+    if selected_employee_data is not None:
+        with st.form("form_contrato", clear_on_submit=True):
+            tipo_contrato = st.selectbox("Tipo de contrato", options=["Empleado", "Proveedor", "Colaborador", "Otro"])
+            fecha_inicio = st.date_input("Fecha de inicio", value=date.today())
+            duracion_dias = st.number_input("Duración del contrato (días)", min_value=1, value=30)
+            monto = st.number_input("Monto / Salario", min_value=0.0, value=float(selected_employee_data['monthly_salary']), format="%.2f")
+            contrato_file = st.file_uploader("Adjuntar contrato (PDF/Imagen)", type=["pdf", "png", "jpg", "jpeg"])
+            enviar = st.form_submit_button("Registrar contrato")
 
-    if enviar:
-        fecha_fin = fecha_inicio + timedelta(days=duracion_dias)
-        nuevo_contrato = {
-            "Nombre": selected_employee_data['name'],
-            "Contacto": selected_employee_data['contact'],
-            "Tipo": tipo_contrato,
-            "Fecha inicio": fecha_inicio,
-            "Fecha fin": fecha_fin,
-            "Monto": monto,
-            "Archivo": contrato_file.name if contrato_file else "No adjunto"
-        }
-        st.session_state.contracts.append(nuevo_contrato)
-        st.success("Contrato registrado exitosamente.")
+        if enviar:
+            fecha_fin = fecha_inicio + timedelta(days=duracion_dias)
+            nuevo_contrato = {
+                "Nombre": selected_employee_data['name'],
+                "Contacto": selected_employee_data['contact'],
+                "Tipo": tipo_contrato,
+                "Fecha inicio": fecha_inicio,
+                "Fecha fin": fecha_fin,
+                "Monto": monto,
+                "Archivo": contrato_file.name if contrato_file else "No adjunto"
+            }
+            st.session_state.contracts.append(nuevo_contrato)
+            st.success("Contrato registrado exitosamente.")
 
     # Mostrar listado de contratos
     st.subheader("Listado de Contratos")

@@ -13,8 +13,6 @@ supp_id = query_params.get("id", None)  # Tomar el primer valor de "id"
 def suppliers_view():
     cols = st.columns(3)
     cols[0].write('## Proveedores')
-    if cols[-1].button('Añadir Proveedor'):
-        st.write("📌 Aquí podrías llamar a `register_supplier()` para agregar un proveedor.")
 
     # 📌 Estadísticas
     col1, col2 = st.columns(2)
@@ -98,7 +96,10 @@ def single_supplier_view():
     st.subheader("📦 Productos del Proveedor")
     supplier_products = p[p['supplier_id'] == supp_id]
     if not supplier_products.empty:
-        st.dataframe(supplier_products[['name', 'stack_price', 'stack_amount', 'category', 'unit']])
+        supplier_products_copy = supplier_products.copy()
+        supplier_products_copy.rename({'name': 'Producto', 'stack_price': 'Precio por paquete', 'stack_amount': 'Tamaño de paquete', 'category':'Categoría', 'unit':'Unidad de medida'}, axis=1, inplace=True)
+        supplier_products_copy.set_index('Producto', inplace=True)
+        st.dataframe(supplier_products_copy[['Precio por paquete', 'Tamaño de paquete', 'Categoría', 'Unidad de medida']])
     else:
         st.warning("Este proveedor no tiene productos registrados.")
 

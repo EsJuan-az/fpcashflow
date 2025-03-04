@@ -4,7 +4,7 @@ import numpy as np
 from time import sleep
 from utils.auth0 import getAuth0
 from utils.store import transaction_movement as tm, work, suppliers, products, employees
-from ui.modals import register_transaction
+from ui.modals import register_transaction, cashout
 from utils.data import stabilization_fund_historic, required_for_stabilization_historic, pending_expenses
 from io import BytesIO
 
@@ -31,6 +31,9 @@ if user_info:
 
     if st.button('Registrar transacción'):
         register_transaction()
+    
+    if st.button('Retirar de fondo de emergencia'):
+        cashout()
 
     # Botón para generar informe
     if st.button('Generar informe'):

@@ -18,7 +18,7 @@ def works_view():
   cols = st.columns(5)
   cols[0].write('## Obras')
   if cols[-1].button('Añadir Obra'):
-      st.write("📌 Aquí podrías llamar a `register_work()` para agregar una obra.")
+      register_work()
 
   # 📌 Estadísticas
   col1, col2, col3 = st.columns(3)
